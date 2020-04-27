@@ -105,6 +105,7 @@ ynh_script_progression --message="Configuring system user..." --time --weight=1
 
 # Create a system user
 ynh_system_user_create --username=$app
+mkdir /home/$app
 
 #=================================================
 # INSTALL DEPENDENCIES
