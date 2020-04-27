@@ -161,11 +161,11 @@ sudo -u postgres psql -c "CREATE USER decidim_app WITH SUPERUSER CREATEDB NOCREA
 ### Create config file
 cd /home/decidim/decidim-app
 ex -s -c '17i|gem "figaro"' -c x Gemfile
-echo "group :production do
-  gem "passenger"
-  gem 'delayed_job_active_record'
-  gem "daemons"
-end" >> Gemfile
+echo "group :production do" >> Gemfile
+echo "  gem "passenger"" >> Gemfile
+echo "  gem 'delayed_job_active_record'" >> Gemfile
+echo "  gem "daemons"" >> Gemfile
+echo "end" >> Gemfile
 
 ### Update app to include extra gems
 bundle install
