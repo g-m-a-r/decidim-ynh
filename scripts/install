@@ -99,8 +99,24 @@ ynh_app_setting_set --app=$app --key=port --value=$port
 # ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
 
 #=================================================
+# CREATE DEDICATED USER
+#=================================================
+ynh_script_progression --message="Configuring system user..." --time --weight=1
+
+# Create a system user
+ynh_system_user_create --username=$app
+
+#=================================================
 # INSTALL DEPENDENCIES
 #=================================================
+
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
+sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger stretch main > /etc/apt/sources.list.d/passenger.list'
+sudo apt-get update
+sudo apt-get install -y libnginx-mod-http-passenger
+sudo rm /etc/apt/sources.list.d/passenger.list
+sudo apt-key del 561F9B9CAC40B2F7
+sudo apt update
 ynh_script_progression --message="Installing dependencies..." --time --weight=1
 
 ### `ynh_install_app_dependencies` allows you to add any "apt" dependencies to the package.
@@ -113,37 +129,58 @@ ynh_script_progression --message="Installing dependencies..." --time --weight=1
 
 ynh_install_app_dependencies $pkg_dependencies
 
-#=================================================
-# CREATE A MYSQL DATABASE
-#=================================================
-ynh_script_progression --message="Creating a MySQL database..." --time --weight=1
+### INSTALL RUBY
+cd /home
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+source ~/.bashrc
+git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+rbenv install 2.6.3
+rbenv global 2.6.3
+echo "gem: --no-document" > ~/.gemrc
+gem install bundler
 
-### Use these lines if you need a database for the application.
-### `ynh_mysql_setup_db` will create a database, an associated user and a ramdom password.
-### The password will be stored as 'mysqlpwd' into the app settings,
-### and will be available as $db_pwd
-### If you're not using these lines:
-###		- Remove the section "BACKUP THE MYSQL DATABASE" in the backup script
-###		- Remove also the section "REMOVE THE MYSQL DATABASE" in the remove script
-###		- As well as the section "RESTORE THE MYSQL DATABASE" in the restore script
 
-db_name=$(ynh_sanitize_dbid --db_name=$app)
-db_user=$db_name
-ynh_app_setting_set --app=$app --key=db_name --value=$db_name
-ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
 
 #=================================================
-# DOWNLOAD, CHECK AND UNPACK SOURCE
+# INSTALL DECIDIM
 #=================================================
-ynh_script_progression --message="Setting up source files..." --time --weight=1
+ynh_script_progression --message="Installing decidim..." --time --weight=1
 
-### `ynh_setup_source` is used to install an app from a zip or tar.gz file,
-### downloaded from an upstream source, like a git repository.
-### `ynh_setup_source` use the file conf/app.src
+### Install the gem Decidim
+gem install decidim
 
-ynh_app_setting_set --app=$app --key=final_path --value=$final_path
-# Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$final_path"
+### Run the generator to create our app
+decidim decidim-app
+
+### Create the user and password in the database
+sudo -u postgres psql -c "CREATE USER decidim_app WITH SUPERUSER CREATEDB NOCREATEROLE PASSWORD '$YNH_APP_ARG_PASSWORD'"
+
+### Create config file
+cd ~/decidim-app
+ex -s -c '17i|gem "figaro"' -c x Gemfile
+echo "group :production do
+  gem "passenger"
+  gem 'delayed_job_active_record'
+  gem "daemons"
+end" >> Gemfile
+
+### Update app to include extra gems
+bundle install
+
+### Generate random string
+cd /home/decidim/decidim-app
+touch /home/decidim/decidim-app/config/application.yml
+echo 'DATABASE_URL: postgres://decidim_app:Password1@localhost/decidim_prod' > /home/decidim/decidim-app/config/application.yml
+echo 'SECRET_KEY_BASE: ' >> /home/decidim/decidim-app/config/application.ymlOB
+echo -n $(rake secret) >> /home/decidim/decidim-app/config/application.yml
+sed 's/Password1/$YNH_APP_ARG_PASSWORD/g' /home/decidim/decidim-app/config/application.yml
+
+### Create admin user
+### This must be done AFTER app install process
+### See "bin/rails console -e production" @https://github.com/Platoniq/decidim-install/blob/master/decidim-bionic.md
+
 
 #=================================================
 # NGINX CONFIGURATION
@@ -155,13 +192,12 @@ ynh_script_progression --message="Configuring nginx web server..." --time --weig
 # Create a dedicated nginx config
 ynh_add_nginx_config
 
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Configuring system user..." --time --weight=1
+# Activate passenger
+if [ ! -f /etc/nginx/modules-enabled/50-mod-http-passenger.conf ]; then sudo ln -s /usr/share/nginx/modules-available/mod-http-passenger.load /etc/nginx/modules-enabled/50-mod-http-passenger.conf ; fi
 
-# Create a system user
-ynh_system_user_create --username=$app
+# Edit passenger conf file
+sed -i '3d' /etc/nginx/conf.d/mod-http-passenger.conf
+echo 'passenger_ruby /home/decidim/.rbenv/shims/ruby;' >> /etc/nginx/conf.d/mod-http-passenger.conf
 
 #=================================================
 # PHP-FPM CONFIGURATION

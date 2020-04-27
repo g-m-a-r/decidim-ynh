@@ -1,11 +1,11 @@
-# App exemple pour YunoHost
+﻿# App exemple pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/REPLACEBYYOURAPP.svg)](https://dash.yunohost.org/appci/app/REPLACEBYYOURAPP)  
-[![Installer REPLACEBYYOURAPP avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=REPLACEBYYOURAPP)
+[![Niveau d'intégration](https://dash.yunohost.org/integration/decidim-ynh.svg)](https://dash.yunohost.org/appci/app/decidim-ynh)  
+[![Installer decidim-ynh avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=decidim-ynh)
 
 *[Read this readme in english.](./README.md)* 
 
-> *Ce package vous permet d'installer REPLACEBYYOURAPP rapidement et simplement sur un serveur Yunohost.  
+> *Ce package vous permet d'installer decidim-ynh rapidement et simplement sur un serveur Yunohost.  
 Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
 
 ## Vue d'ensemble
@@ -39,9 +39,9 @@ L'application peut-elle être utilisée par plusieurs utilisateurs?
 
 #### Architectures supportées
 
-* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/REPLACEBYYOURAPP%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/REPLACEBYYOURAPP/)
-* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/REPLACEBYYOURAPP%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/REPLACEBYYOURAPP/)
-* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/ci/logs/REPLACEBYYOURAPP%20%28Apps%29.svg)](https://ci-stretch.nohost.me/ci/apps/REPLACEBYYOURAPP/)
+* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/decidim-ynh%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/decidim-ynh/)
+* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/decidim-ynh%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/decidim-ynh/)
+* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/ci/logs/decidim-ynh%20%28Apps%29.svg)](https://ci-stretch.nohost.me/ci/apps/decidim-ynh/)
 
 ## Limitations
 
@@ -56,7 +56,7 @@ https://yunohost.org/packaging_apps
 
 ## Liens
 
- * Signaler un bug: https://github.com/YunoHost-Apps/REPLACEBYYOURAPP_ynh/issues
+ * Signaler un bug: https://github.com/YunoHost-Apps/decidim-ynh_ynh/issues
  * Site de l'application: Lien vers le site officiel de cette application
  * Dépôt de l'application principale: Lien vers le dépôt officiel de l'application principale
  * Site web YunoHost: https://yunohost.org/
@@ -67,11 +67,11 @@ Informations pour les développeurs
 ----------------
 
 **Seulement si vous voulez utiliser une branche de test pour le codage, au lieu de fusionner directement dans la banche principale.**
-Merci de faire vos pull request sur la [branche testing](https://github.com/YunoHost-Apps/REPLACEBYYOURAPP_ynh/tree/testing).
+Merci de faire vos pull request sur la [branche testing](https://github.com/YunoHost-Apps/decidim-ynh_ynh/tree/testing).
 
 Pour essayer la branche testing, procédez comme suit.
 ```
-sudo yunohost app install https://github.com/YunoHost-Apps/REPLACEBYYOURAPP_ynh/tree/testing --debug
+sudo yunohost app install https://github.com/YunoHost-Apps/decidim-ynh_ynh/tree/testing --debug
 ou
-sudo yunohost app upgrade REPLACEBYYOURAPP -u https://github.com/YunoHost-Apps/REPLACEBYYOURAPP_ynh/tree/testing --debug
+sudo yunohost app upgrade decidim-ynh -u https://github.com/YunoHost-Apps/decidim-ynh_ynh/tree/testing --debug
 ```
