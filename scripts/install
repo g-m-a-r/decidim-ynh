@@ -138,7 +138,7 @@ su decidim -c 'git clone https://github.com/rbenv/ruby-build.git /home/decidim/.
 su decidim -c "~/.rbenv/bin/rbenv install 2.6.3"
 su decidim -c "~/.rbenv/bin/rbenv global 2.6.3"
 su decidim -c 'echo "gem: --no-document" > ~/.gemrc'
-su decidim -c "gem install bundler"
+su decidim -c "~/.rbenv/versions/2.6.3/bin gem install bundler"
 
 #=================================================
 # INSTALL DECIDIM
