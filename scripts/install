@@ -130,7 +130,7 @@ ynh_script_progression --message="Installing dependencies..." --time --weight=1
 ynh_install_app_dependencies $pkg_dependencies
 
 ### INSTALL RUBY
-ynh_script_progression --message="Installing Ruby (this may take some time)..." --time --weight=1
+ynh_script_progression --message="Installing Ruby (this could take a while)..." --time --weight=1
 su decidim -c "git clone https://github.com/rbenv/rbenv.git ~/.rbenv"
 su decidim -c "echo 'export PATH="~/.rbenv/bin:$PATH"' >> ~/.bashrc"
 su decidim -c "echo 'eval "'$(rbenv init -)'"' >> ~/.bashrc"
@@ -143,13 +143,14 @@ su decidim -c "~/.rbenv/versions/2.6.3/bin/gem install bundler"
 #=================================================
 # INSTALL DECIDIM
 #=================================================
-ynh_script_progression --message="Installing decidimi (this may take some time)..." --time --weight=1
+ynh_script_progression --message="Installing decidimi (this could take a while)..." --time --weight=1
 
 ### Install the gem Decidim
 su decidim -c "cd ~ && ~/.rbenv/versions/2.6.3/bin/gem install decidim"
 
 ### Change owner of /decidim folder
 chown -R $app: /home/$app
+chown -R $app: /var/cache/yunohost/from_file/scripts/
 
 ### Run the generator to create our app
 su decidim -c "~/.rbenv/versions/2.6.3/bin/decidim /home/decidim/decidim-app"
