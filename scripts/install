@@ -104,8 +104,7 @@ ynh_app_setting_set --app=$app --key=port --value=$port
 ynh_script_progression --message="Configuring system user..." --time --weight=1
 
 # Create a system user
-ynh_system_user_create --username=$app
-mkdir /home/$app
+ynh_system_user_create --username=$app -h /home/$app -s
 
 #=================================================
 # INSTALL DEPENDENCIES
@@ -131,17 +130,16 @@ ynh_script_progression --message="Installing dependencies..." --time --weight=1
 ynh_install_app_dependencies $pkg_dependencies
 
 ### INSTALL RUBY
-su decidim -c git clone https://github.com/rbenv/rbenv.git /home/decidim/.rbenv
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-source ~/.bashrc
-git clone https://github.com/rbenv/ruby-build.git /home/decidim/.rbenv/plugins/ruby-build
-rbenv install 2.6.3
-rbenv global 2.6.3
-echo "gem: --no-document" > ~/.gemrc
-gem install bundler
-
-
+ynh_script_progression --message="Installing Ruby" --time --weight=1
+su decidim -c "git clone https://github.com/rbenv/rbenv.git ~/.rbenv"
+su decidim -c "echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc"
+su decidim -c "echo 'eval "$(rbenv init -)"' >> ~/.bashrc"
+su decidim -c "source ~/.bashrc"
+su decidim -c 'git clone https://github.com/rbenv/ruby-build.git /home/decidim/.rbenv/plugins/ruby-build'
+su decidim -c "rbenv install 2.6.3"
+su decidim -c "rbenv global 2.6.3"
+su decidim -c "echo "gem: --no-document" > ~/.gemrc"
+su decidim -c "gem install bundler"
 
 #=================================================
 # INSTALL DECIDIM
@@ -149,10 +147,10 @@ gem install bundler
 ynh_script_progression --message="Installing decidim..." --time --weight=1
 
 ### Install the gem Decidim
-gem install decidim
+su decidim -c "gem install decidim"
 
 ### Run the generator to create our app
-decidim decidim-app
+su decidim -c "decidim decidim-app"
 
 ### Create the user and password in the database
 sudo -u postgres psql -c "CREATE USER decidim_app WITH SUPERUSER CREATEDB NOCREATEROLE PASSWORD '$YNH_APP_ARG_PASSWORD'"
