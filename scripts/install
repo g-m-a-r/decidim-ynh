@@ -134,6 +134,7 @@ ynh_script_progression --message="Installing Ruby" --time --weight=1
 su decidim -c "git clone https://github.com/rbenv/rbenv.git ~/.rbenv"
 su decidim -c "echo 'export PATH="~/.rbenv/bin:$PATH"' >> ~/.bashrc"
 su decidim -c "echo 'eval "'$(rbenv init -)'"' >> ~/.bashrc"
+su decidim -c "bash"
 su decidim -c "source ~/.bashrc"
 su decidim -c 'git clone https://github.com/rbenv/ruby-build.git /home/decidim/.rbenv/plugins/ruby-build'
 su decidim -c "rbenv install 2.6.3"
