@@ -146,7 +146,7 @@ su decidim -c "~/.rbenv/versions/2.6.3/bin/gem install bundler"
 ynh_script_progression --message="Installing decidim..." --time --weight=1
 
 ### Install the gem Decidim
-su decidim -c "gem install decidim"
+su decidim -c "~/.rbenv/versions/2.6.3/bin/gem install decidim"
 
 ### Run the generator to create our app
 su decidim -c "decidim decidim-app"
