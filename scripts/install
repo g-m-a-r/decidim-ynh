@@ -152,7 +152,7 @@ su decidim -c "cd ~ && ~/.rbenv/versions/2.6.3/bin/gem install decidim"
 chown -R $app: /home/$app
 
 ### Run the generator to create our app
-su decidim -c "~/.rbenv/versions/2.6.3/bin/decidim decidim-app"
+su decidim -c "~/.rbenv/versions/2.6.3/bin/decidim /home/decidim/decidim-app"
 
 ### Setup database
 sudo -u postgres psql -c "CREATE USER decidim_app WITH SUPERUSER CREATEDB NOCREATEROLE PASSWORD '$YNH_APP_ARG_PASSWORD'"
