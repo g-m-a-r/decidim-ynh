@@ -131,7 +131,7 @@ ynh_script_progression --message="Installing dependencies..." --time --weight=1
 ynh_install_app_dependencies $pkg_dependencies
 
 ### INSTALL RUBY
-git clone https://github.com/rbenv/rbenv.git /home/decidim/.rbenv
+su decidim -c git clone https://github.com/rbenv/rbenv.git /home/decidim/.rbenv
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 source ~/.bashrc
