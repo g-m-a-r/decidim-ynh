@@ -105,7 +105,6 @@ ynh_script_progression --message="Configuring system user..." --time --weight=1
 
 # Create a system user
 ynh_system_user_create --username=$app -h /home/$app -s
-chown -R $app:$app /home/$app
 
 #=================================================
 # INSTALL DEPENDENCIES
@@ -148,6 +147,9 @@ ynh_script_progression --message="Installing decidimi (this may take some time).
 
 ### Install the gem Decidim
 su decidim -c "cd ~ && ~/.rbenv/versions/2.6.3/bin/gem install decidim"
+
+### Change owner of /decidim folder
+chown -R $app: /home/$app
 
 ### Run the generator to create our app
 su decidim -c "~/.rbenv/versions/2.6.3/bin/decidim decidim-app"
